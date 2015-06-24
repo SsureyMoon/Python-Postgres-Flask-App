@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="row">
+        {% block category %}
+            <div class="col-md-4">
+                <h3>Categories</h3>
+                <div class="vertical-divider">
+                    {% for c in categories %}
+                        <div>
+                            <ul>
+                                <li>
+                                    <a href="{{ url_for('basic.showItemList', category_id=c.id) }}">
+                                        {{ c.name }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endblock category %}
+        {% block item %}
+            <div class="col-md-8">
+                {% if user %}
+                <a href="{{ url_for('basic.addItem') }}">
+                    Add item
+                </a>
+                {% endif %}
+                <h3>Latest Items</h3>
+                <div>
+                    {% for i in items %}
+                        <ul>
+                            <li>
+                                <a href="{{ url_for('basic.showItemDetail', category_id=i.category_id, item_id=i.id) }}">
+                                    {{ i.title }}
+                                </a> ({{ i.category.name }})
+                            </li>
+                        </ul>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endblock item %}
+    </div>
+{% endblock content %}

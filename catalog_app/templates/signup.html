@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block style %}
+    {{ super() }}
+    <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+{% endblock style %}
+{% block content %}
+    <script type="text/javascript">
+       var csrf_token = "{{ csrf_token }}";
+    </script>
+    <form action="" method="POST">
+        <input name=_csrf_token type=hidden value="{{ csrf_token }}">
+        <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" name="email" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword" name="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPasswordConfirm">Confirm Password</label>
+            <input type="password" class="form-control" id="exampleInputPasswordConfirm" name="confirm" placeholder="Confrim">
+        </div>
+        <button type="submit" class="btn btn-success">Sign up</button>
+        <div id="signinButton" class="social-login">
+            <span class="g-signin"
+                  data-scope="openid email"
+                  data-clientid="{{ client_id }}"
+                  data-redirecturi="postmessage"
+                  data-accesstype="offline"
+                  data-cookiepolicy="single_host_origin"
+                  data-callback="signInCallback"
+                  data-approvalprompt="force">
+            </span>
+            <script src="{{ url_for('static', filename='google_oauth.js') }}"></script>
+        </div>
+        <div id="fb-root"></div>
+        <fb:login-button scope="public_profile,email" data-size="large" onlogin="checkLoginState();">
+        </fb:login-button>
+    </form>
+    {% endblock content %}
+{% block javascript %}
+    {{ super() }}
+{% endblock javascript %}

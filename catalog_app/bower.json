@@ -1,0 +1,22 @@
+{
+  "name": "catalog",
+  "version": "0.0.0",
+  "homepage": "https://github.com/SsureyMoon/Simple-Python-Flask",
+  "authors": [
+    "Ssurey Moon <ssureymoon@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "static/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.4",
+    "font-awesome": "~4.3.0"
+  }
+}

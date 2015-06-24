@@ -1,0 +1,18 @@
+{% extends "main.html" %}
+{% block content %}
+    <h3> {{ item.title }} </h3>
+    <div>
+        {{ item.title }}</br>
+        {{ item.description }}
+    </div>
+    <div>
+        {% if user %}
+            <a href="{{ url_for('basic.editItem', category_id=item.category_id, item_id=item.id) }}">
+                Edit
+            </a>
+            <a href="{{ url_for('basic.deleteItem', item_id=item.id) }}">
+                Delete
+            </a>
+        {% endif %}
+    </div>
+{% endblock content %}

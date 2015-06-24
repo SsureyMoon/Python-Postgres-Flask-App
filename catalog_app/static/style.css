@@ -1,0 +1,61 @@
+.navbar-default {
+    background-color: #202020;
+}
+
+.navbar-default .navbar-brand{
+  color: #FFF;
+}
+
+.collapse.navbar-collapse ul li a {
+  color: #FFF;
+}
+
+body {
+    padding-top: 70px;
+}
+
+.row.vertical-divider {
+  overflow: hidden;
+}
+.vertical-divider > div {
+    padding-bottom: 20px;
+    margin-bottom: -20px;
+    border-right: 3px solid #555555;
+}
+.vertical-divider > div:last-child {
+    border-right: none;
+}
+/*
+    This vertical-divider is from:
+    http://stackoverflow.com/a/26599613/4246571
+*/
+
+ul {
+    list-style-type: none;
+}
+
+.btn-success {
+    float: left;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.social-login {
+    float: left;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-top: 2px;
+}
+
+.fb-login-button {
+    padding-top: 3px;
+    height: 32px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.fb_iframe_widget {
+    margin-top: 5px;
+    margin-left: 20px;
+    margin-right: 20px;
+}

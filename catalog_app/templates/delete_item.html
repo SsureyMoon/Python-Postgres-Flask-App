@@ -1,0 +1,16 @@
+{% extends "main.html" %}
+{% block content %}
+    <h3> Delete Item </h3>
+    <p>Are you sure to delete this item:<br></p>
+    <h4>{{ item.title.capitalize() }}</h4>
+    <script type="text/javascript">
+       var delete_item_url = "{{ url_for('basic.deleteItem', item_id=item.id) }}";
+    </script>
+    <form id="delete-item-form" action="" method="POST">
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+{% endblock content %}
+{% block javascript %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='controller.js') }}"></script>
+{% endblock javascript %}

@@ -1,0 +1,6 @@
+settings/client_secret.json
+.DS_Store
+catalog_app/static/components
+*.db
+*.pyc
+.idea

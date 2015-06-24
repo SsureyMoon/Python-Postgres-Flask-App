@@ -1,0 +1,28 @@
+{% extends "main.html" %}
+{% block content %}
+    {% block category %}
+        {{ super() }}
+    {% endblock category %}
+
+    {% block item %}
+        <div class="col-md-8">
+            {% if user %}
+            <a href="{{ url_for('basic.addItem') }}">
+                Add item
+            </a>
+            {% endif %}
+            <h3> {{ category.name.capitalize() }} Items ({{ items.count() }} items)</h3>
+            <div>
+                {% for i in items %}
+                    <ul>
+                        <li>
+                            <a href="{{ url_for('basic.showItemDetail', category_id=i.category_id, item_id=i.id) }}">
+                                {{ i.title }}
+                            </a>
+                        </li>
+                    </ul>
+                {% endfor %}
+            </div>
+        </div>
+    {% endblock item %}
+{% endblock content %}
