@@ -14,6 +14,7 @@ A project in Python, SQLAlchemy(Postgres), and Flask
 - [Python](https://www.python.org/) version 2.7.x or higher
 - [Flask](http://flask.pocoo.org/) version 0.10.x or higher
 - [Jinja2](http://jinja.pocoo.org/docs/dev/) 2.7.x or higher
+- [PostgreSQL](http://www.postgresql.org/) 9.3.x or higher
 - [SQLAlchemy](http://www.sqlalchemy.org/) 0.8.x or higher
 - [PyJWT](https://github.com/jpadilla/pyjwt) 1.3.x or higher
 - [Tornado](http://www.tornadoweb.org/en/stable/) 4.x or higher
@@ -30,6 +31,7 @@ sudo apt-get install upgrade
 sudo apt-get install ufw git apache2 libapache2-mod-wsgi python-dev python-setuptools python-pip
 
 ```
+
 ### Setting the front-end environment
 ```bash
 sudo apt-get install nodejs
@@ -57,10 +59,24 @@ sudo adduser new-user-name sudo
 
 
 ### Change the SSH port
+Edit ssh port from 22 to 2200, enable root ssh login.
+
+
 Edit ssh configuration ```nano /etc/ssh/sshd_config``` and edit below:
 ```bash
-Port 22 -> Port 2200
-AllowUsers root new-user-name
+...
+...
+# What ports, IPs and protocols we listen for
+Port 2200
+...
+...
+# Authentication:
+...
+...
+AllowUsers new-user-name
+...
+...
+
 ```
 
 run ```service ssh restart``` to apply the changes.
@@ -68,10 +84,13 @@ run ```service ssh restart``` to apply the changes.
 
 ### Configure the Uncomplicated Firewall
 ```bash
-ufw enable
+sudo ufw enable
+sudo ufw default deny
 sudo ufw allow 80/tcp
 sudo ufw allow 2200
 sudo ufw allow 123/ntp
+sudo ufw limit ssh
+sudo ufw enable
 ```
 
 
@@ -82,42 +101,6 @@ cd /var/www
 git clone https://github.com/SsureyMoon/Python-Postgres-Flask-App.git
 mv Python-Postgres-Flask-App catalog_app
 ```
-
-
-### Configurating Apache2
-Configure wsgi
-```bash
-sudo a2enmod wsgi
-sudo nano /etc/apache2/sites-available/catalog_app.conf
-```
-
-In ```/etc/apache2/sites-available/catalog_app.conf```:
-```
-<VirtualHost *:80>
-                WSGIDaemonProcess catalog_app python-path=/var/www/catalog_app:$
-                WSGIProcessGroup catalog_app
-                WSGIScriptAlias /catalog /var/www/catalog_app/catalog_app.wsgi
-                <Directory /var/www/catalog_app/>
-                        Order allow,deny
-                        Allow from all
-                </Directory>
-                ErrorLog ${APACHE_LOG_DIR}/error.log
-                LogLevel warn
-                CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
-```
-
-Register wsgi module
-```bash
-sudo a2ensite catalog_app
-sudo nano /etc/apache2/sites-available/catalog_app.conf
-```
-
-Restart Apache2
-```bash
-service apache2 restart
-```
-
 
 ### Installing python dependencies
 Make virtual environment
@@ -141,6 +124,58 @@ cd /var/www/catalog_app/catalog_app
 npm install -g bower
 ln -s /usr/bin/nodejs /usr/bin/node
 bower update --allow-root
+```
+
+### Configurating Apache2
+Configure wsgi
+```bash
+sudo a2enmod wsgi
+sudo nano /etc/apache2/sites-available/catalog_app.conf
+```
+
+In ```/etc/apache2/sites-available/catalog_app.conf```:
+```
+<VirtualHost *:80>
+                ServerName 52.11.89.94
+                DocumentRoot /var/www/catalog_app
+                WSGIDaemonProcess catalog_app home=/var/www/catalog_app python-path=/var/www/catalog_app:/var/www/catalog_app/catalog_venv/lib/python2.7/site-packages
+                WSGIProcessGroup catalog_app
+                WSGIPassAuthorization on
+                WSGIScriptAlias / /var/www/catalog_app/catalog_app.wsgi
+                #DocumentRoot /var/www/catalog_app
+                <Directory /var/www/catalog_app>
+                        Order allow,deny
+                        Allow from all
+                </Directory>
+                ErrorLog ${APACHE_LOG_DIR}/catalog-error.log
+                LogLevel warn
+                CustomLog ${APACHE_LOG_DIR}/catalog-access.log combined
+</VirtualHost>
+```
+We use Json Web token in Authorization request header. Make sure ```WSGIPassAuthorization on``` to use the Authorization header 
+
+
+Register wsgi module and disable the default config:
+```bash
+sudo a2ensite catalog_app
+sudo nano /etc/apache2/sites-available/catalog_app.conf
+sudo a2dissite 000-default
+```
+
+Restart Apache2:
+```bash
+service apache2 reload
+```
+
+Check Apache2 configuration is fully loaded:
+```
+/usr/sbin/apache2 -V
+```
+
+If you see ```Invalid Mutex directory in argument file:${APACHE_LOCK_DIR}```, then run:
+```bash
+source /etc/apache2/envvars
+service apache2 reload
 ```
 
 ### Downloading a credentials file for Google + OAuth
@@ -169,10 +204,22 @@ Find ```App ID``` and ```App Secret``` and fill the blanks inthe ```catalog_app/
 ** Please NEVER commit your code with your app secret! You can avoid that by running this command: **
 ```bash
 cd /var/www/catalog_app
-echo 'settings/config.py' >> .gitignore
+echo '' >> .gitignore
+```
+or
+```bash
+cd /var/www/catalog_app
+git update-index --assume-unchanged settings/config.py
 ```
 
 ### Creating database
+Config Postgres by editing ```/etc/postgresql/9.3/main/pg_hba.conf```:
+```bash
+# Database administrative login by Unix domain socket
+local   all             postgres                                md5 
+```
+
+Create database
 ```bash
 sudo -i -u postgres
 postgres=# \password
@@ -189,4 +236,5 @@ Now, we can login with username: user{i}@email.com, password: user{i}password.
 For example, username: ```user1@email.com```, password: ```user1password```
 
 ## Test the server
-Test your application by visiting http://52.11.89.94
+Test your application by visiting http://ec2-52-11-89-94.us-west-2.compute.amazonaws.com
+User test user id and password  *user1@email.com*, *user1password*

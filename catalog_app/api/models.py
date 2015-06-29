@@ -100,11 +100,11 @@ class Category(Base):
         Category = cls
         if order_by is not None:
             if asc:
-                categories = session.query(Category)\
-                    .order_by(asc(order_by)).all()
+                categories = session.query(Category).order_by(
+                    asc(order_by)).all()
             else:
-                categories = session.query(Category)\
-                    .order_by(desc(order_by)).all()
+                categories = session.query(Category).order_by(
+                    desc(order_by)).all()
         else:
             categories = session.query(Category).all()
         return categories
@@ -118,8 +118,8 @@ class Category(Base):
         """
         Category = cls
         try:
-            category = session.query(Category)\
-                .filter_by(id=id).one()
+            category = session.query(Category).filter_by(
+                id=id).one()
         except:
             category = None
         return category
@@ -132,8 +132,8 @@ class Category(Base):
         :return: a list of items in the given category
         """
         try:
-            items = session.query(Item)\
-                .filter_by(category_id=category_id)
+            items = session.query(Item).filter_by(
+                category_id=category_id)
         except:
             items = []
         return items
@@ -177,8 +177,8 @@ class Item(Base):
         :return: most recent items by their 'created' column
         """
         Item = cls
-        items = session.query(Item)\
-            .order_by(desc(Item.created), desc(Item.id)).limit(limit)
+        items = session.query(Item).order_by(
+            desc(Item.created), desc(Item.id)).limit(limit)
         return items
 
     @classmethod

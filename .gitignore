@@ -4,3 +4,4 @@ catalog_app/static/components
 *.db
 *.pyc
 .idea
+catalog_venv

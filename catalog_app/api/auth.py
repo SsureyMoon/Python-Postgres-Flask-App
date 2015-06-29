@@ -17,7 +17,7 @@ Functions:
 created on 13/June/2014
 """
 
-
+import os
 import json
 
 import httplib2
@@ -34,6 +34,9 @@ from util import check_password, encrypt_password, \
     generate_token, generate_csrf_token
 from settings import config
 
+
+# Debug info. Check log files in /var/log/apache2
+print '!!!DEBUG-INFO added by grader!!! Current Working Directory: ' + os.getcw
 
 # Client_ID for Google + login.
 # Please make sure that you have downloaded and placed
