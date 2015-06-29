@@ -59,7 +59,7 @@ sudo adduser new-user-name sudo
 
 
 ### Change the SSH port
-Edit ssh port from 22 to 2200, enable root ssh login.
+Edit ssh port from 22 to 2200, disable root ssh login.
 
 
 Edit ssh configuration ```nano /etc/ssh/sshd_config``` and edit below:
@@ -71,15 +71,16 @@ Port 2200
 ...
 ...
 # Authentication:
-...
-...
+LoginGraceTime 120
+PermitRootLogin no              
+StrictModes yes
 AllowUsers new-user-name
 ...
 ...
 
 ```
 
-run ```service ssh restart``` to apply the changes.
+run ```sudo service ssh restart``` to apply the changes.
 
 
 ### Configure the Uncomplicated Firewall
@@ -89,7 +90,7 @@ sudo ufw default deny
 sudo ufw allow 80/tcp
 sudo ufw allow 2200
 sudo ufw allow 123/ntp
-sudo ufw limit ssh
+sudo ufw limit 2200/tcp
 sudo ufw enable
 ```
 
